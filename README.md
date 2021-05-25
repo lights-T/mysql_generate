@@ -1,0 +1,2 @@
+# mysql_generate
+根据数据库生成基础model和数据库脚本的工具
