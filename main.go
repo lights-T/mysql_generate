@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	mysql "github.com/creationtime/mysql_generate/model"
+	mysql "github.com/lights-T/mysql_generate/model"
 )
 
 var (
@@ -18,16 +18,18 @@ var (
 	help     bool
 	V        bool
 	v        bool
+	env      string
 )
 
 const CurrentVersion = "1.0.3"
 
+//go:generate mysql_generate -a love_house:ebXRwXwGPAhHM6S6@tcp(192.168.1.8:3306) -d love_house -t lv_bill_detail -e windows
 func main() {
-
 	flag.BoolVar(&help, "help", false, "get help")
 	flag.StringVar(&addr, "a", "", "mysql connection address,like a user:password@tcp(127.0.0.1)")
 	flag.StringVar(&database, "d", "", "mysql database name,like d_user")
 	flag.StringVar(&table, "t", "", "mysql table name,like t_user")
+	flag.StringVar(&env, "e", "linux", "env name,like windows or linux")
 
 	flag.BoolVar(&v, "v", false, "get version")
 	flag.BoolVar(&V, "V", false, "get version")
@@ -54,7 +56,7 @@ func main() {
 			return
 		}
 	}
-	mysql.SaveConfig(addr, database, table)
+	mysql.SaveConfig(addr, database, table, env)
 	mysql.Init()
 }
 

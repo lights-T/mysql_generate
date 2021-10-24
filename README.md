@@ -13,11 +13,11 @@ mysql_generate包是根据数据库生成基础model和数据库脚本的工具
 ### 使用工具
 #### 第一种方式
 * `cd ~/model` &&
-  `mysql_generate -a address -d user:password@database -t table`
+  `mysql_generate -a address -d user:password@database -t table -e envName`
 
 #### 第二种方式
 * 在model.go 的init()上注释
-  ` // go:generate  mysql_generate -a address -d database -t table`
+  ` // go:generate  mysql_generate -a address -d database -t table -e envName`
 * `cd ~/model`
 * `go generate`
 
@@ -42,5 +42,6 @@ mysql_generate包是根据数据库生成基础model和数据库脚本的工具
 * 修改字段名，生的语句需要注意，工具自动生成会有两条先删后加脚本
 * 需要在运用项目的model目录下运行服务
 * `-t`参数若不输入，则默认生成全表
+* `-e`参数若不输入，则默认linux环境
 
 

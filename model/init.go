@@ -17,9 +17,11 @@ var conInfo *Connection
 var Package = ""
 
 type Connection struct {
-	A string `jsonpb:"u"`
-	D string `jsonpb:"d"`
-	T string `jsonpb:"t"`
+	A      string `jsonpb:"u"`      //address
+	D      string `jsonpb:"d"`      //database
+	T      string `jsonpb:"t"`      //table
+	E      string `jsonpb:"e"`      //env
+	Spacer string `jsonpb:"spacer"` //spacer
 }
 
 func Init() {
@@ -55,7 +57,7 @@ func Init() {
 		}
 		dbInfo.FetchTableDDL(tableName)
 		if err := g.WriteDDL(); err != nil {
-			fmt.Println("write to file err:", err)
+			fmt.Println("writeDDl to file err:", err)
 		}
 	}
 	if len(conInfo.T) == 0 {
@@ -70,12 +72,12 @@ func Init() {
 		generator(conInfo.D + "." + conInfo.T)
 
 	}
-	gitInit()
+	//gitInit()
 	fmt.Println("Congratulation! Finish...")
 }
 
 func gitInit() {
-	cmd := exec.Command("go", "get", "-insecure", "-v", "git.xxg.com/cenddev/go/v2/lib")
+	cmd := exec.Command("go", "get", "-insecure", "-v", "git.xxx.com/cenddev/go/v2/lib")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		fmt.Println("go list err:", err)
@@ -113,8 +115,17 @@ func getPackage() string {
 
 }
 
-func SaveConfig(a, d, t string) bool {
-	c := &Connection{A: a, D: d, T: t}
+func SaveConfig(a, d, t, e string) bool {
+	var spacer string
+	switch e {
+	case "windows":
+		spacer = "\\"
+	case "linux":
+		spacer = "/"
+	default:
+		spacer = "/"
+	}
+	c := &Connection{A: a, D: d, T: t, E: e, Spacer: spacer}
 	conInfo = c
 	return true
 }
