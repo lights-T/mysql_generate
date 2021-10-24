@@ -12,12 +12,17 @@ mysql_generate包是根据数据库生成基础model和数据库脚本的工具
 
 ### 使用工具
 #### 第一种方式
-* `cd ~/model` &&
-  `mysql_generate -a address -d user:password@database -t table -e envName`
+* `cd mysql_generate`
+* `go build main.go`生成当前环境的可执行文件
+* 将可执行文件放到GOROOT的bin文件夹下
+* `cd ~/model` && `mysql_generate -a address -d user:password@database -t table`
 
 #### 第二种方式
-* 在model.go 的init()上注释
-  ` // go:generate  mysql_generate -a address -d database -t table -e envName`
+* `cd mysql_generate`
+* `go build main.go`生成当前环境的可执行文件
+* 将可执行文件放到GOROOT的bin文件夹下
+* 在model.go 的init()上注释（注意//后面没有空格）
+  ` //go:generate  mysql_generate -a address -d database -t table`
 * `cd ~/model`
 * `go generate`
 
