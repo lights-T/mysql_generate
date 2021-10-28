@@ -61,6 +61,8 @@ func (g *Generate) Parse() *Generate {
 
 	g.generateSearchWithFieldsLimit()
 
+	g.generateCount()
+
 	g.generateCreate()
 
 	g.generateUpdate()
@@ -72,6 +74,36 @@ func (g *Generate) Parse() *Generate {
 	g.format()
 
 	return g
+}
+
+func (g *Generate) generateCount() {
+	fd := `
+	func Count%s(ctx context.Context, exps interface{}) (int64, error) {
+	var count int64
+	var err error
+   conditions := exp.NewExpressionList(exp.AndType)
+	switch exps.(type) {
+	case map[string]interface{}:
+		for k, v := range exps.(map[string]interface{}) {
+			conditions = conditions.Append(goqu.I(k).Eq(v))
+		}
+	case exp.ExpressionList:
+		conditions = exps.(exp.ExpressionList)
+	}
+	count, err := db.GetInstance("read").From(%s).
+		Prepared(true).
+		Where(conditions).CountContext(ctx); err != nil {
+		return nil, err
+	}
+	if err != nil {
+		return count, err
+	}
+
+	return count, nil
+}
+	`
+	fd = fmt.Sprintf(fd, generator.CamelCase(g.structName), generator.CamelCase(g.tableName))
+	g.buf.WriteString(fd)
 }
 
 func (g *Generate) getLowerName() string {
