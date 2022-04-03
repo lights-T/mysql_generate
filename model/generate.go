@@ -90,11 +90,9 @@ func (g *Generate) generateCount() {
 	case exp.ExpressionList:
 		conditions = exps.(exp.ExpressionList)
 	}
-	if count, err := db.GetInstance("read").From(%s).
+	count, err = db.GetInstance("read").From(%s).
 		Prepared(true).
-		Where(conditions).CountContext(ctx); err != nil {
-		return nil, err
-	}
+		Where(conditions).CountContext(ctx)
 	if err != nil {
 		return count, err
 	}
