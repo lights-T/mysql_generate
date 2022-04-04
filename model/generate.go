@@ -140,7 +140,7 @@ func (g *Generate) generateStruct() {
 
 func (g *Generate) generateCreate() {
 	fd := `
-	func Create%s(ctx context.Context,tx *goqu.TxDatabase,%s *%s,excludeFields ...string) (int64,error){
+	func Create%s(ctx context.Context,%s *%s,tx *goqu.TxDatabase,excludeFields ...string) (int64,error){
 	var builder *goqu.InsertDataset
 	if tx != nil {
 		builder = tx.Insert(%s)
@@ -181,7 +181,7 @@ func (g *Generate) generateCreate() {
 
 func (g *Generate) generateUpdate() {
 	fd := `
-      func Update%s(ctx context.Context,tx *goqu.TxDatabase,data map[string]interface{},exps interface{}) (int64, error){
+      func Update%s(ctx context.Context,data map[string]interface{},exps interface{},tx *goqu.TxDatabase) (int64, error){
 	var builder *goqu.UpdateDataset
 	if tx != nil {
 		builder = tx.Update(%s)
