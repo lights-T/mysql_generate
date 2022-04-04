@@ -140,8 +140,13 @@ func (g *Generate) generateStruct() {
 
 func (g *Generate) generateCreate() {
 	fd := `
-	func Create%s(ctx context.Context,%s *%s,excludeFields ...string) (int64,error){
-	builder := db.GetInstance("").Insert(%s)
+	func Create%s(ctx context.Context,tx *goqu.TxDatabase,%s *%s,excludeFields ...string) (int64,error){
+	var builder *goqu.InsertDataset
+	if tx != nil {
+		builder = tx.Insert(%s)
+	} else {
+		builder = db.GetInstance("").Insert(%s)
+	}
 	cols := make([]interface{}, 0, 10)
 	if len(excludeFields) > 0 {
 		_tempMap := make(map[string]struct{})
@@ -170,14 +175,19 @@ func (g *Generate) generateCreate() {
 `
 
 	firsS := strings.ToLower(generator.CamelCase(g.structName)[0:1])
-	fd = fmt.Sprintf(fd, generator.CamelCase(g.structName), firsS, generator.CamelCase(g.structName), generator.CamelCase(g.tableName), firsS)
+	fd = fmt.Sprintf(fd, generator.CamelCase(g.structName), firsS, generator.CamelCase(g.structName), generator.CamelCase(g.tableName), generator.CamelCase(g.tableName), firsS)
 	g.buf.WriteString(fd)
 }
 
 func (g *Generate) generateUpdate() {
 	fd := `
-      func Update%s(ctx context.Context,data map[string]interface{},exps interface{}) (int64, error){
-	builder := db.GetInstance("").Update(%s)
+      func Update%s(ctx context.Context,tx *goqu.TxDatabase,data map[string]interface{},exps interface{}) (int64, error){
+	var builder *goqu.UpdateDataset
+	if tx != nil {
+		builder = tx.Update(%s)
+	} else {
+		builder = db.GetInstance("").Update(%s)
+	}
     rc := make(goqu.Record)
 	for k,v := range data{
 		rc[k]=v
@@ -199,7 +209,7 @@ func (g *Generate) generateUpdate() {
  return u.RowsAffected()
 }
 `
-	fd = fmt.Sprintf(fd, generator.CamelCase(g.structName), generator.CamelCase(g.tableName))
+	fd = fmt.Sprintf(fd, generator.CamelCase(g.structName), generator.CamelCase(g.tableName), generator.CamelCase(g.tableName))
 	g.buf.WriteString(fd)
 }
 
