@@ -89,6 +89,10 @@ func (g *Generate) generateCount() {
 		}
 	case exp.ExpressionList:
 		conditions = exps.(exp.ExpressionList)
+	case exp.Record:
+		for k, v := range exps.(exp.Record) {
+			conditions = conditions.Append(goqu.I(k).Eq(v))
+		}
 	}
 	count, err = db.GetInstance("read").From(%s).
 		Prepared(true).
@@ -200,6 +204,10 @@ func (g *Generate) generateUpdate() {
 		}
 	case exp.ExpressionList:
 		conditions = exps.(exp.ExpressionList)
+	case exp.Record:
+		for k, v := range exps.(exp.Record) {
+			conditions = conditions.Append(goqu.I(k).Eq(v))
+		}
 	}
     u,err := builder.Set(rc).Where(conditions).Executor().ExecContext(ctx)
 	if err !=nil {
@@ -241,6 +249,10 @@ func (g *Generate) generateGetOne() {
 		}
 	case exp.ExpressionList:
 		conditions = exps.(exp.ExpressionList)
+	case exp.Record:
+		for k, v := range exps.(exp.Record) {
+			conditions = conditions.Append(goqu.I(k).Eq(v))
+		}
 	}
 	if _, err := db.GetInstance("read").From(%s).
 		Prepared(true).
@@ -285,6 +297,10 @@ func (g *Generate) generateGetOneWithFields() {
 		}
 	case exp.ExpressionList:
 		conditions = exps.(exp.ExpressionList)
+	case exp.Record:
+		for k, v := range exps.(exp.Record) {
+			conditions = conditions.Append(goqu.I(k).Eq(v))
+		}
 	}
 	if _, err := db.GetInstance("read").From(%s).
 		Prepared(true).
@@ -328,6 +344,10 @@ func (g *Generate) generateSearch() {
 		}
 	case exp.ExpressionList:
 		conditions = exps.(exp.ExpressionList)
+	case exp.Record:
+		for k, v := range exps.(exp.Record) {
+			conditions = conditions.Append(goqu.I(k).Eq(v))
+		}
 	}
 	if  err := db.GetInstance("read").From(%s).
 		Prepared(true).
@@ -375,6 +395,10 @@ func (g *Generate) generateSearchWithFields() {
 		}
 	case exp.ExpressionList:
 		conditions = exps.(exp.ExpressionList)
+	case exp.Record:
+		for k, v := range exps.(exp.Record) {
+			conditions = conditions.Append(goqu.I(k).Eq(v))
+		}
 	}
 	if  err := db.GetInstance("read").From(%s).
 		Prepared(true).
@@ -425,6 +449,10 @@ func (g *Generate) generateSearchWithFieldsLimit() {
 		}
 	case exp.ExpressionList:
 		conditions = exps.(exp.ExpressionList)
+	case exp.Record:
+		for k, v := range exps.(exp.Record) {
+			conditions = conditions.Append(goqu.I(k).Eq(v))
+		}
 	}
 	if  err := db.GetInstance("read").From(%s).
 		Prepared(true).
